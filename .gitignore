@@ -1,0 +1,45 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.so
+
+# --- Entornos virtuales ---
+.venv/
+venv/
+env/
+ENV/
+.venv.bak/
+*.egg-info/
+.eggs/
+
+# --- Archivos de configuración locales ---
+*.env
+.env.*
+!env.example   # si quieres subir un ejemplo vacío
+
+# --- Logs y cachés ---
+*.log
+*.tmp
+*.swp
+*.swo
+*.DS_Store
+*.coverage
+htmlcov/
+.coverage*
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# --- Archivos de datos locales ---
+app/data/*.json
+!app/data/.gitkeep   # si quieres versionar la carpeta vacía
+
+# --- IDE ---
+.vscode/
+.idea/
+*.iml
