@@ -72,6 +72,9 @@ class MarcaOut(BaseModel):
     creado_en: datetime | None = None
     actualizado_en: datetime | None = None
     titular: TitularOut
+    # ⬇⬇⬇ agrega estos dos, porque en tu JSON viven al nivel de la marca
+    info_empresarial: Optional[InfoEmpresarialOut] = None
+    contacto: Optional[ContactoOut] = None
     model_config = ConfigDict(from_attributes=True)
 
 class TitularUpdate(TitularIn): pass

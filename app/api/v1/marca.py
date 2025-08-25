@@ -12,6 +12,30 @@ def _utcnow_iso():
 def _next_id(data: list[dict]) -> int:
     return max((m.get("id", 0) for m in data), default=0) + 1
 
+def _next_contacto_id(data: list[dict]) -> int:
+    max_id = 0
+    for m in data:
+        c = m.get("contacto")
+        if c and isinstance(c.get("id"), int):
+            max_id = max(max_id, c["id"])
+    return max_id + 1
+
+def _next_info_empresarial_id(data: list[dict]) -> int:
+    max_id = 0
+    for m in data:
+        ie = m.get("info_empresarial")
+        if ie and isinstance(ie.get("id"), int):
+            max_id = max(max_id, ie["id"])
+    return max_id + 1
+
+def _next_titular_id(data: list[dict]) -> int:
+    max_id = 0
+    for m in data:
+        t = m.get("titular")
+        if t and isinstance(t.get("id"), int):
+            max_id = max(max_id, t["id"])
+    return max_id + 1
+
 def _deep_merge(dst: dict, src: dict) -> dict:
     out = dict(dst)
     for k, v in src.items():
@@ -66,19 +90,23 @@ def create_marca(payload: MarcaCreate) -> MarcaOut:
     data = load()
 
     item = payload.model_dump()
-    item["id"] = _next_id(data)
+    item["id"] = _next_id(data)  # id de la marca
     now = _utcnow_iso()
     item["creado_en"] = now
     item["actualizado_en"] = now
 
-    # asignar ids a anidados si vienen
+    # Asignar id a titular
     tit = item.get("titular")
     if tit and "id" not in tit:
-        tit["id"] = 1
-        if tit.get("contacto") and "id" not in tit["contacto"]:
-            tit["contacto"]["id"] = 1
-        if tit.get("info_empresarial") and "id" not in tit["info_empresarial"]:
-            tit["info_empresarial"]["id"] = 1
+        tit["id"] = _next_titular_id(data)
+
+    # Asignar id a contacto top-level
+    if item.get("contacto") and "id" not in item["contacto"]:
+        item["contacto"]["id"] = _next_contacto_id(data)
+
+    # Asignar id a info_empresarial top-level
+    if item.get("info_empresarial") and "id" not in item["info_empresarial"]:
+        item["info_empresarial"]["id"] = _next_info_empresarial_id(data)
 
     data.append(item)
     save(data)
